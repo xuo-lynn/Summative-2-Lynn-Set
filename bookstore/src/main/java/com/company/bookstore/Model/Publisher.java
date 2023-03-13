@@ -1,9 +1,12 @@
 package com.company.bookstore.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -13,21 +16,34 @@ public class Publisher {
     @Column(name = "publisher_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String firstName;
-    private String lastName;
-    private String address1;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonBackReference
+    @JoinColumn(name = "author_id")
+    private Set<Book> books = new HashSet<>();
+
+    private String name;
+    private String street;
     private String city;
     private String state;
     private Integer postalCode;
-    private String country;
     private String email;
+    private String phone;
 
-    public String getAddress1() {
-        return address1;
+    public String getStreet() {
+        return street;
     }
 
-    public void setAddress1(String address1) {
-        this.address1 = address1;
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getCity() {
@@ -54,13 +70,6 @@ public class Publisher {
         this.postalCode = postalCode;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
 
     public String getEmail() {
         return email;
@@ -78,20 +87,20 @@ public class Publisher {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override
@@ -99,11 +108,11 @@ public class Publisher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Publisher publisher = (Publisher) o;
-        return id.equals(publisher.id) && Objects.equals(firstName, publisher.firstName) && Objects.equals(lastName, publisher.lastName) && Objects.equals(address1, publisher.address1) && Objects.equals(city, publisher.city) && Objects.equals(state, publisher.state) && Objects.equals(postalCode, publisher.postalCode) && Objects.equals(country, publisher.country) && Objects.equals(email, publisher.email);
+        return id.equals(publisher.id) && Objects.equals(books, publisher.books) && Objects.equals(name, publisher.name) && Objects.equals(street, publisher.street) && Objects.equals(city, publisher.city) && Objects.equals(state, publisher.state) && Objects.equals(postalCode, publisher.postalCode) && Objects.equals(email, publisher.email) && Objects.equals(phone, publisher.phone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, address1, city, state, postalCode, country, email);
+        return Objects.hash(id, name, books, street, city, state, postalCode, email, phone);
     }
 }

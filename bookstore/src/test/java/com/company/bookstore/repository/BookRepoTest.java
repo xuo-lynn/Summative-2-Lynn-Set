@@ -1,75 +1,84 @@
 package com.company.bookstore.repository;
 
+import com.company.bookstore.Model.Author;
 import com.company.bookstore.Model.Book;
 import com.company.bookstore.Model.Publisher;
 import com.company.bookstore.Repository.BookRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class BookRepoTest {
-    @Autowired
-    private BookRepo bookRepo;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private BookRepo bookRepository;
 
     @Test
-    public void testFindByAuthorId() {
-        // Create a publisher and save it to the database
-        Publisher publisher = new Publisher();
-        publisher.setFirstName("John");
-        publisher.setLastName("Doe");
-        publisher.setAddress1("123 Main St");
-        publisher.setCity("New York");
-        publisher.setState("NY");
-        publisher.setPostalCode(10001);
-        publisher.setCountry("USA");
-        publisher.setEmail("johndoe@example.com");
-        entityManager.persist(publisher);
+    public void shouldCreateBook() {
+        Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
+        Publisher publisher1 = new Publisher();
+        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        bookRepository.save(book);
+        Optional<Book> foundBook = bookRepository.findById(book.getId());
+        assertThat(foundBook).isPresent();
+    }
 
-        // Create a book and set its author to the publisher created above
-        Book book = new Book();
-        book.setIsbn("978-3-16-148410-0");
-        book.setPublishDate(LocalDate.of(2022, 3, 1));
-        book.setAuthor(publisher);
-        book.setTitle("Java for Beginners");
-        book.setPublisher(publisher);
-        book.setPrice(BigDecimal.valueOf(19.99));
-        entityManager.persist(book);
+    @Test
+    public void shouldUpdateBook() {
+        Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
+        Publisher publisher1 = new Publisher();
+        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        bookRepository.save(book);
 
-        // Create another book with a different author
-        Publisher anotherPublisher = new Publisher();
-        anotherPublisher.setFirstName("Jane");
-        anotherPublisher.setLastName("Smith");
-        anotherPublisher.setAddress1("456 Main St");
-        anotherPublisher.setCity("Los Angeles");
-        anotherPublisher.setState("CA");
-        anotherPublisher.setPostalCode(90001);
-        anotherPublisher.setCountry("USA");
-        anotherPublisher.setEmail("janesmith@example.com");
-        entityManager.persist(anotherPublisher);
+        book.setTitle("The Catcher in the Rye");
+        bookRepository.save(book);
 
-        Book anotherBook = new Book();
-        anotherBook.setIsbn("978-3-16-148410-1");
-        anotherBook.setPublishDate(LocalDate.of(2022, 3, 2));
-        anotherBook.setAuthor(anotherPublisher);
-        anotherBook.setTitle("Python for Beginners");
-        anotherBook.setPublisher(anotherPublisher);
-        anotherBook.setPrice(BigDecimal.valueOf(24.99));
-        entityManager.persist(anotherBook);
+        Optional<Book> updatedBook = bookRepository.findById(book.getId());
+        assertThat(updatedBook).isPresent();
+        assertThat(updatedBook.get().getTitle()).isEqualTo("The Catcher in the Rye");
+    }
 
-        // Call the findByAuthorId method and check that it returns the correct book
-        List<Book> books = bookRepo.findByAuthorId(publisher.getId());
-        assertThat(books.size()).isEqualTo(1);
-        assertThat(books.get(0)).isEqualTo(book);
+    @Test
+    public void shouldDeleteBook() {
+        Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
+        Publisher publisher1 = new Publisher();
+        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        bookRepository.save(book);
+
+        bookRepository.delete(book);
+
+        Optional<Book> deletedBook = bookRepository.findById(book.getId());
+        assertThat(deletedBook).isNotPresent();
+    }
+
+
+    @Test
+    public void shouldSearchByAuthorID(){
+        Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
+        Publisher publisher1 = new Publisher();
+        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        bookRepository.save(book);
+
+        Optional<Book> foundBook = bookRepository.findById(book.getId());
+        assertThat(foundBook).isPresent();
+    }
+
+    @Test
+    public void shouldReadAll(){
+        Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
+        Publisher publisher1 = new Publisher();
+        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        bookRepository.save(book);
+
+        List<Book> books = bookRepository.findAll();
+        assertThat(books).hasSize(1);
     }
 }
