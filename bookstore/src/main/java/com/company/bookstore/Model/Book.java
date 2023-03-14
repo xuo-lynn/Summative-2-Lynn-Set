@@ -26,17 +26,17 @@ public class Book {
     @Column(name = "publish_date", nullable = false)
     private LocalDate publishDate;
 
-    public Publisher getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(Publisher author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
-    private Publisher author;
+    private Author author;
 
     public String getTitle() {
         return title;
@@ -75,7 +75,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(String isbn, LocalDate publishDate, Publisher author, String title, Publisher publisher, BigDecimal price) {
+    public Book(String isbn, LocalDate publishDate, Author author, String title, Publisher publisher, BigDecimal price) {
         this.isbn = isbn;
         this.publishDate = publishDate;
         this.author = author;

@@ -25,7 +25,7 @@ public class BookRepoTest {
     public void shouldCreateBook() {
         Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
         Publisher publisher1 = new Publisher();
-        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        Book book = new Book("1234567890", LocalDate.now(), author1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
         bookRepository.save(book);
         Optional<Book> foundBook = bookRepository.findById(book.getId());
         assertThat(foundBook).isPresent();
@@ -35,7 +35,7 @@ public class BookRepoTest {
     public void shouldUpdateBook() {
         Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
         Publisher publisher1 = new Publisher();
-        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        Book book = new Book("1234567890", LocalDate.now(), author1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
         bookRepository.save(book);
 
         book.setTitle("The Catcher in the Rye");
@@ -50,7 +50,7 @@ public class BookRepoTest {
     public void shouldDeleteBook() {
         Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
         Publisher publisher1 = new Publisher();
-        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        Book book = new Book("1234567890", LocalDate.now(), author1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
         bookRepository.save(book);
 
         bookRepository.delete(book);
@@ -64,7 +64,7 @@ public class BookRepoTest {
     public void shouldSearchByAuthorID(){
         Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
         Publisher publisher1 = new Publisher();
-        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        Book book = new Book("1234567890", LocalDate.now(), author1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
         bookRepository.save(book);
 
         Optional<Book> foundBook = bookRepository.findById(book.getId());
@@ -75,7 +75,7 @@ public class BookRepoTest {
     public void shouldReadAll(){
         Author author1 = new Author("John", "Smith", "123 Main St", "Anytown", "NY", "12345", "555-555-1212", "test@email.com");
         Publisher publisher1 = new Publisher();
-        Book book = new Book("1234567890", LocalDate.now(), publisher1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
+        Book book = new Book("1234567890", LocalDate.now(), author1, "The Great Gatsby", publisher1, new BigDecimal("9.99"));
         bookRepository.save(book);
 
         List<Book> books = bookRepository.findAll();
